@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator typegraphql {
+  provider = "typegraphql-prisma"
+}
+
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "../erd.png"
+}
+
+model User {
+  id                String                   @id @default(uuid())
+  username          String?                  @unique
+  password          String?
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  isVerified        Boolean                  @default(false)
+  name              String?
+  reports           Report[]
+  sources           Source[]
+  profilePic        String?
+  subscribedReports UserSubscribedToReport[]
+}
+
+model UserSubscribedToReport {
+  user      User     @relation(fields: [userId], references: [id])
+  report    Report   @relation(fields: [reportId], references: [id])
+  userId    String
+  reportId  String
+  createdAt DateTime @default(now())
+
+  @@id([userId, reportId, createdAt])
+}
+
+model Report {
+  id              String                   @id @default(uuid())
+  title           String
+  description     String
+  keywords        String[]
+  user            User                     @relation(fields: [userId], references: [id])
+  userId          String
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
+  usersSubscribed UserSubscribedToReport[]
+  verified        VerifiedReport[]
+  category        Category                 @relation(fields: [categoryName], references: [name])
+  categoryName    String
+}
+
+model Source {
+  id              String           @id @default(uuid())
+  title           String
+  description     String
+  url             String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  verifiedReports VerifiedReport[]
+  user            User             @relation(fields: [userId], references: [id])
+  userId          String
+  timesViewed     Int              @default(0)
+  category        Category         @relation(fields: [categoryName], references: [name])
+  categoryName    String
+}
+
+model Category {
+  name   String   @id
+  Report Report[]
+  Source Source[]
+}
+
+model VerifiedReport {
+  createdAt DateTime @default(now())
+  source    Source   @relation(fields: [sourceId], references: [id])
+  report    Report   @relation(fields: [reportId], references: [id])
+  sourceId  String
+  reportId  String
+  state     State
+
+  @@id([sourceId, reportId, createdAt])
+}
+
+enum State {
+  TRUE
+  FALSE
+  NOT_VERIFIED
+}
