@@ -1,0 +1,11 @@
+fragment SourceFragment on Source {
+  id
+  title
+  description
+  url
+  createdAt
+  updatedAt
+  user {
+    ...UserFragment
+  }
+}

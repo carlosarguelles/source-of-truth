@@ -1,18 +1,21 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
-import React from "react";
-import { Search } from "./screens/Search";
-import { Home } from "./screens/Home";
-import { Box, NativeBaseProvider } from "native-base";
+import { StackNavigator } from '@/screens'
+import { NavigationContainer } from '@react-navigation/native'
+import { NativeBaseProvider } from 'native-base'
+import React from 'react'
+import { createClient, Provider } from 'urql'
 
-const Tab = createBottomTabNavigator();
+const client = createClient({
+  url: 'http://192.168.1.60:4000/graphql',
+})
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <Provider value={client}>
       <NativeBaseProvider>
-        <Box safeArea>hello</Box>
+        <NavigationContainer>
+          <StackNavigator />
+        </NavigationContainer>
       </NativeBaseProvider>
-    </NavigationContainer>
-  );
+    </Provider>
+  )
 }

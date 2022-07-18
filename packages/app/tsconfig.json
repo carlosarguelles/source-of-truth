@@ -22,7 +22,12 @@
     "skipLibCheck": true,
     "baseUrl": "./",
     "allowSyntheticDefaultImports": true,
-    "removeComments": true
+    "removeComments": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/screens/*": ["./src/screens/*"]
+    }
   },
   "extends": "expo/tsconfig.base"
 }

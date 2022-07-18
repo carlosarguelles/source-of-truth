@@ -6,9 +6,18 @@ import { Context } from './types'
 import { buildSchema } from 'type-graphql'
 import { resolvers } from './resolvers'
 import { prisma } from './db'
+import cors from 'cors'
 
 async function main() {
   const app = express()
+
+  app.use(
+    cors({
+      origin: '*',
+      credentials: true,
+      optionsSuccessStatus: 200,
+    })
+  )
 
   const schema = await buildSchema({
     resolvers,

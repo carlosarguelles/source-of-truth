@@ -1,0 +1,8 @@
+fragment ReportFragment on Report {
+  id
+  title
+  description
+  keywords
+  createdAt
+  updatedAt
+}

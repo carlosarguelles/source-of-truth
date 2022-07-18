@@ -1,0 +1,12 @@
+query VerifiedReports {
+  verifiedReports {
+    createdAt
+    state
+    report {
+      ...ReportFragment
+    }
+    source {
+      ...SourceFragment
+    }
+  }
+}
